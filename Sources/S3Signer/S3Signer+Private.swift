@@ -73,7 +73,7 @@ extension S3Signer {
                 throw Error.invalidEncoding
         }
         let fullURL = "\(url.absoluteString)?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=\(config.accessKey)%2F\(credScope)&X-Amz-Date=\(dates.long)&X-Amz-Expires=\(expiration.value)&X-Amz-SignedHeaders=\(signHeaders)"
-
+        
         // This should never throw.
         guard let url = URL(string: fullURL) else {
             throw Error.badURL(fullURL)
@@ -121,49 +121,5 @@ extension S3Signer {
         }
         return updatedHeaders
     }
-
-    func presignedURL(for httpMethod: HTTPMethod, url: URL, expiration: Expiration, region: Region? = nil, headers: [String: String] = [:], dates: Dates) throws -> URL? {
-        var updatedHeaders = headers
-
-        let region = region ?? config.region
-
-        updatedHeaders["host"] = url.host ?? region.host
-
-        let (canonRequest, fullURL) = try presignedURLCanonRequest(httpMethod, dates: dates, expiration: expiration, url: url, region: region, headers: updatedHeaders)
-
-        let stringToSign = try createStringToSign(canonRequest, dates: dates, region: region)
-        let signature = try createSignature(stringToSign, timeStampShort: dates.short, region: region)
-        let presignedURL = URL(string: fullURL.absoluteString.appending("&X-Amz-Signature=\(signature)"))
-        return presignedURL
-    }
-
-    func headers(for httpMethod: HTTPMethod, urlString: URLRepresentable, region: Region? = nil, headers: [String: String] = [:], payload: Payload, dates: Dates) throws -> HTTPHeaders {
-        guard let url = urlString.convertToURL() else {
-            throw Error.badURL("\(urlString)")
-        }
-
-        let bodyDigest = try payload.hashed()
-        let region = region ?? config.region
-        var updatedHeaders = update(headers: headers, url: url, longDate: dates.long, bodyDigest: bodyDigest, region: region)
-
-        if httpMethod == .PUT && payload.isBytes {
-            updatedHeaders["content-md5"] = try MD5.hash(payload.bytes).base64EncodedString()
-        }
-
-        if httpMethod == .PUT || httpMethod == .DELETE {
-            updatedHeaders["content-length"] = payload.size()
-            if httpMethod == .PUT && url.pathExtension != "" {
-                updatedHeaders["content-type"] = (MediaType.fileExtension(url.pathExtension) ?? .plainText).description
-            }
-        }
-
-        updatedHeaders["authorization"] = try generateAuthHeader(httpMethod, url: url, headers: updatedHeaders, bodyDigest: bodyDigest, dates: dates, region: region)
-
-        var headers = HTTPHeaders()
-        for (key, value) in updatedHeaders {
-            headers.add(name: key, value: value)
-        }
-
-        return headers
-    }
+    
 }
