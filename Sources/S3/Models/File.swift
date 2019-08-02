@@ -10,6 +10,7 @@ import Foundation
 
 
 /// File data
+public typealias S3File = File
 public struct File {
     
     /// File to be uploaded (PUT)
