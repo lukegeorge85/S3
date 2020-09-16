@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "awsS3",
     products: [
-        .library(name: "awsS3", targets: ["awsS3"]),
+        .library(name: "S3", targets: ["S3"]),
         .library(name: "S3Signer", targets: ["S3Signer"]),
         .library(name: "S3TestTools", targets: ["S3TestTools"])
     ],
@@ -14,7 +14,7 @@ let package = Package(
         .package(url: "https://github.com/LiveUI/VaporTestTools.git", from: "0.1.5")
     ],
     targets: [
-        .target(name: "awsS3", dependencies: [
+        .target(name: "S3", dependencies: [
             "Vapor",
             "S3Signer",
             "XMLCoding"
@@ -26,7 +26,7 @@ let package = Package(
         ),
         .target(name: "S3DemoApp", dependencies: [
             "Vapor",
-            "awsS3",
+            "S3",
             "S3Signer"
             ]
         ),
@@ -37,11 +37,11 @@ let package = Package(
         .target(name: "S3TestTools", dependencies: [
             "Vapor",
             "VaporTestTools",
-            "awsS3"
+            "S3"
             ]
         ),
         .testTarget(name: "S3Tests", dependencies: [
-            "awsS3"
+            "S3"
             ]
         )
     ]
