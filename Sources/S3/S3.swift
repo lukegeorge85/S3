@@ -13,7 +13,7 @@ import HTTP
 
 
 /// Main S3 class
-public class S3: S3Client {    
+public class awsS3: S3Client {    
     
     /// Error messages
     public enum Error: Swift.Error {
@@ -63,7 +63,7 @@ public class S3: S3Client {
 
 // MARK: - Helper methods
 
-extension S3 {
+extension awsS3 {
     
     // QUESTION: Can we replace this with just Data()?
     /// Serve empty data
@@ -93,7 +93,7 @@ extension S3 {
     
     /// Get mime type for file
     func mimeType(forFileAtUrl url: URL) -> String {
-        return S3.mimeType(forFileAtUrl: url)
+        return awsS3.mimeType(forFileAtUrl: url)
     }
     
     /// Create URL builder
