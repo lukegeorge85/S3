@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "S3",
+    name: "awsS3",
     products: [
         .library(name: "S3", targets: ["S3"]),
         .library(name: "S3Signer", targets: ["S3Signer"]),
