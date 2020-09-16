@@ -12,8 +12,8 @@ import Foundation
 extension Error {
     
     /// Return S3 Error if possible
-    public func s3Error() -> S3.Error? {
-        guard let error = self as? S3.Error else {
+    public func s3Error() -> awsS3.Error? {
+        guard let error = self as? awsS3.Error else {
             return nil
         }
         return error
@@ -21,7 +21,7 @@ extension Error {
     
     /// Return S3 ErrorMessage if possible
     public func s3ErroMessage() -> ErrorMessage? {
-        guard let error = self as? S3.Error else {
+        guard let error = self as? awsS3.Error else {
             return nil
         }
         switch error {
