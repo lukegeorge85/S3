@@ -11,7 +11,7 @@ import S3Signer
 
 
 // Helper S3 extension for working with buckets
-public extension S3 {
+public extension awsS3 {
     
     // MARK: Buckets
     
